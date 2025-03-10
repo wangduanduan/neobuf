@@ -11,7 +11,6 @@ Contact: sip:jiri@195.37.78.190:5060
 Content-Type: application/sdp
 Content-Length: 218
 
-
 v=0
 o=CiscoSystemsSIP-IPPhone-UserAgent 14474 8233 IN IP4 195.37.78.190
 s=SIP Call
@@ -20,4 +19,4 @@ t=0 0
 m=audio 18456 RTP/AVP 0 8 18 101
 a=rtpmap:0 pcmu/8000
 a=rtpmap:101 telephone-event/8000
-a=fmtp:101 0-11 
+a=fmtp:101 0-11

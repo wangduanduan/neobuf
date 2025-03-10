@@ -1,41 +1,71 @@
 import { readFileSync } from 'node:fs';
 import { Buffer } from 'node:buffer';
+// \n 0x0A LF
+// \r 0x0D CR
 const BreakChar = '\n'
 const LineBreak = Buffer.from(`${BreakChar}`)
-const HeaderBreak = Buffer.from(`${BreakChar}${BreakChar}`)
+const LineBreakLen = LineBreak.length
+const LineBreak2 = Buffer.from(`${BreakChar}${BreakChar}`)
+const LineBreak2Len = LineBreak2.length
 
-type Position = [number, number]
+type HeaderList = Buffer[];
+
+interface HeaderLine<T> {
+    readonly ln: Buffer
+    parsed: T
+}
+
+interface HF_CSEQ {
+
+}
+interface HF_VIA {
+
+}
+
+interface Headers {
+    cseq?: HeaderLine<HF_CSEQ>
+    via?: HeaderLine<HF_VIA>[]
+};
 
 class SIP {
-    private readonly buf: Buffer
-    firstLine: Position = [0, 0]
-    headers: Position = [0, 0]
-    body: Position = [0, 0]
+    private readonly rawBuf: Buffer
+    private badBuf: Boolean = false
+
+    firstLineBuf: Buffer = Buffer.from([])
+    headerBuf: Buffer = Buffer.from([])
+    bodyBuf: Buffer = Buffer.from([])
+    headers: Headers = {}
+
     constructor(buf: Buffer) {
-        this.buf = buf
-        this.parseFirstLine()
-        this.parseHeaders()
+        this.rawBuf = buf
+
+        const firstLineEnd = this.rawBuf.indexOf(LineBreak)
+
+        if (firstLineEnd === -1) {
+            this.badBuf = true
+            return
+        }
+
+        this.firstLineBuf = this.rawBuf.subarray(0, firstLineEnd + LineBreakLen)
+
+        const headerEnd = this.rawBuf.indexOf(LineBreak2, firstLineEnd + LineBreak.length)
+        if (headerEnd === -1) {
+            this.badBuf = true
+            return
+        }
+
+        this.headerBuf = this.rawBuf.subarray(firstLineEnd + LineBreak.length, headerEnd + LineBreakLen)
+        this.bodyBuf = this.rawBuf.subarray(headerEnd + LineBreak2Len)
     }
-    parseFirstLine() {
-        const firstLinePosition = this.buf.indexOf(LineBreak)
-        this.firstLine = [0, firstLinePosition]
-    }
-    parseHeaders() {
-        const headersPosition = this.buf.indexOf(HeaderBreak, this.firstLine[1] + LineBreak.length)
-        this.headers = [this.firstLine[1] + LineBreak.length, headersPosition]
-    }
-    ranger(start: number, end: number) {
-        return this.buf.subarray(start, end)
-    }
-    printRanger(pos: Position) {
-        console.log(this.buf.subarray(...pos).toString())
-    }
+
 }
 
 const sip1 = readFileSync('./sip/invite1.sip')
 const s1 = new SIP(sip1)
-s1.printRanger(s1.firstLine)
-s1.printRanger(s1.headers)
+
+console.log(s1.firstLineBuf.toString('hex'))
+console.log(s1.headerBuf.toString('hex'))
+console.log(s1.bodyBuf.toString('hex'))
 // console.log(s1.headers)
 // console.log(LineBreak.toString('hex'), HeaderBreak.toString('hex'))
 // console.log(sip1)
