@@ -1,9 +1,9 @@
 export enum hdr {
+    accept/*!< Accept header field */,
     accept_contact/*!< Accept-Contact header */,
     accept_language/*!< Accept-Language header field */,
-    accept/*!< Accept header field */,
-    allow_events /*!< Allow-Events header */,
     allow /*!< Allow header field */,
+    allow_events /*!< Allow-Events header */,
     authorization/*!< Authorization header field */,
     callid /*!< Call-Id header field */,
     callinfo /*!< Call-Info header field*/,
@@ -20,8 +20,9 @@ export enum hdr {
     event/*!< Event header field */,
     expires /*!< Expires header field */,
     from /*!< From header field */,
-    identity_info /*!< Identity-info header field */,
     identity /*!< Identity header field */,
+    identity_info /*!< Identity-info header field */,
+    invalid_header,
     max_forwards /*!< MaxForwards header field */,
     min_expires /*!< Min-Expires header */,
     min_se /*!< Min-SE */,
@@ -60,15 +61,26 @@ export enum hdr {
     www_authenticate /*!< WWW-Authenticate header field */,
 };
 
-export const hdr_type_f = {
-    [hdr.accept_contact]: 'Accept-Contact: ',
-    [hdr.accept_language]: 'Accept-Language: ',
-    [hdr.accept]: 'Accept: ',
-    [hdr.allow_events]: 'Allow: ',
+interface header_node {
+    readonly rawBuf: Buffer,
+    parsed?: any
+}
+
+export type header_map = Map<hdr, header_node[]>
+
+interface hdr_type_i {
+    [index: number]: string
+}
+
+export const hdr_type_s: hdr_type_i = {
+    [hdr.accept_contact]: 'Accept-Contact',
+    [hdr.accept_language]: 'Accept-Language',
+    [hdr.accept]: 'Accept',
+    [hdr.allow_events]: 'Allow-Events: ',
     [hdr.allow]: 'Allow: ',
     [hdr.authorization]: 'Authorization: ',
     [hdr.callid]: 'Call-ID: ',
-    [hdr.callinfo]: 'DCall-Infoate: ',
+    [hdr.callinfo]: 'Call-Infoate: ',
     [hdr.contact]: 'Contact: ',
     [hdr.content_disposition]: 'Content-Disposition: ',
     [hdr.content_encoding]: 'Content-Encoding: ',
@@ -116,3 +128,34 @@ export const hdr_type_f = {
     [hdr.via]: 'Via: ',
     [hdr.www_authenticate]: 'WWW-Authenticate: ',
 }
+
+export function hdr_type_map_s(): Map<string, hdr> {
+    const map_s = new Map<string, hdr>()
+    for (const it in hdr_type_s) {
+        map_s.set(hdr_type_s[it], parseInt(it))
+    }
+    return map_s
+}
+export const hdr_type_name = hdr_type_map_s()
+
+const headerFlag = Buffer.from(': ')
+export function get_header_type(buf: Buffer): hdr {
+    const start = buf.indexOf(headerFlag)
+
+    if (start === -1) {
+        return hdr.invalid_header
+    }
+
+    if (buf.length <= start + headerFlag.length) {
+        return hdr.invalid_header
+    }
+
+    const head_name = buf.subarray(0, start + headerFlag.length).toString()
+
+    if (hdr_type_name.has(head_name)) {
+        return hdr_type_name.get(head_name) as hdr
+    }
+
+    return hdr.other
+}
+
