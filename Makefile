@@ -1,4 +1,4 @@
 push:
 	git add -A
 	git commit -am "WIP"
-	ggpush
+	git push origin main
