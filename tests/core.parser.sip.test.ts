@@ -5,7 +5,7 @@ import { hdr } from "../src/core/parser/header";
 
 
 test('hm-01', () => {
-    const invite1 = readFileSync('sip/invite1.sip')
+    const invite1 = readFileSync('./tests/data/invite1.sip')
     const s1 = new SIPMsg(invite1)
     expect(s1.hm.get(hdr.via)?.length).toBe(1)
 
