@@ -1,3 +1,5 @@
+import { core_params } from "./core_params";
+
 export class OpenSIPS {
     constructor() {
 
@@ -9,13 +11,10 @@ export class OpenSIPS {
      * @param key 参数名
      * @param value 参数值
      */
-    set_core_parameters(key: string, value: string) {
+    set_core_parameters(key: core_params, value: string) {
 
     }
-    listen(proto: string,ip: string, port: number) {
+    on(event: string, callback: Function) {
 
-    }
-    on (event: string, callback: Function) {
-        
     }
 }
