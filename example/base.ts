@@ -18,14 +18,14 @@ app.on('error', (err: any) => {
     console.error(err);
 });
 
-app.on('request', (req: any) => {
-    if (mf_process_maxfwd_header(req, 10)) {
+app.on('request', (ctx: any) => {
+    if (mf_process_maxfwd_header(ctx, 10)) {
 
     }
-    if (has_totag(req)) {
+    if (has_totag(ctx)) {
 
     } else {
-        req.drop()
+        ctx.drop()
     }
 })
 

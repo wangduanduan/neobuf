@@ -1,4 +1,4 @@
-# neobuf: OpenSIPS but full Node.js
+# neobuf: like OpenSIPS but full Node.js
 
 wip
 
