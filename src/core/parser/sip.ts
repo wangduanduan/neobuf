@@ -34,7 +34,7 @@ export class SIPMsg {
         this.bodyBuf = this.rawBuf.subarray(headerEnd + LineBreak2Len)
 
         for (const it of this.parseLines()) {
-            const h = get_header_type(it)
+            const [h, n] = get_header_type(it)
             if (h === hdr.invalid_header) {
                 this.badBuf = true
                 return
@@ -44,7 +44,8 @@ export class SIPMsg {
             }
 
             this.hm.get(h)?.push({
-                rawBuf: it
+                rawBuf: it,
+                name: n
             })
         }
     }

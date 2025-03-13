@@ -62,7 +62,9 @@ export enum hdr {
 };
 
 interface header_node {
-    readonly rawBuf: Buffer,
+    readonly rawBuf?: Buffer,
+    name: string
+    parsed_s?: string
     parsed?: any
 }
 
@@ -73,9 +75,9 @@ interface hdr_type_i {
 }
 
 export const hdr_type_s: hdr_type_i = {
-    [hdr.accept_contact]: 'Accept-Contact',
-    [hdr.accept_language]: 'Accept-Language',
-    [hdr.accept]: 'Accept',
+    [hdr.accept_contact]: 'Accept-Contact: ',
+    [hdr.accept_language]: 'Accept-Language: ',
+    [hdr.accept]: 'Accept: ',
     [hdr.allow_events]: 'Allow-Events: ',
     [hdr.allow]: 'Allow: ',
     [hdr.authorization]: 'Authorization: ',
@@ -139,23 +141,23 @@ export function hdr_type_map_s(): Map<string, hdr> {
 export const hdr_type_name = hdr_type_map_s()
 
 const headerFlag = Buffer.from(': ')
-export function get_header_type(buf: Buffer): hdr {
+export function get_header_type(buf: Buffer): [hdr, string] {
     const start = buf.indexOf(headerFlag)
 
     if (start === -1) {
-        return hdr.invalid_header
+        return [hdr.invalid_header, '']
     }
 
     if (buf.length <= start + headerFlag.length) {
-        return hdr.invalid_header
+        return [hdr.invalid_header, '']
     }
 
     const head_name = buf.subarray(0, start + headerFlag.length).toString()
 
     if (hdr_type_name.has(head_name)) {
-        return hdr_type_name.get(head_name) as hdr
+        return [hdr_type_name.get(head_name)!, head_name]
     }
 
-    return hdr.other
+    return [hdr.other, head_name]
 }
 
