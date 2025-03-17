@@ -1,10 +1,10 @@
 export enum hdr {
-    accept/*!< Accept header field */,
-    accept_contact/*!< Accept-Contact header */,
-    accept_language/*!< Accept-Language header field */,
+    accept /*!< Accept header field */,
+    accept_contact /*!< Accept-Contact header */,
+    accept_language /*!< Accept-Language header field */,
     allow /*!< Allow header field */,
     allow_events /*!< Allow-Events header */,
-    authorization/*!< Authorization header field */,
+    authorization /*!< Authorization header field */,
     callid /*!< Call-Id header field */,
     callinfo /*!< Call-Info header field*/,
     contact /*!< Contact header field */,
@@ -12,12 +12,12 @@ export enum hdr {
     content_encoding /*!< Content-Encoding header */,
     content_length /*!< Content-Length header field */,
     content_type /*!< Content-Type header field */,
-    cseq/*!< CSeq header field */,
+    cseq /*!< CSeq header field */,
     date /*!< Date header field */,
     diversion /*!< Diversion header field */,
     eoh /*!< End of message header (lastid + 1) */,
     error /*!< Error while parsing */,
-    event/*!< Event header field */,
+    event /*!< Event header field */,
     expires /*!< Expires header field */,
     from /*!< From header field */,
     identity /*!< Identity header field */,
@@ -35,34 +35,34 @@ export enum hdr {
     privacy /*!< Privacy header field */,
     proxy_auth /*!< Proxy-Authorization hdr field */,
     proxy_authenticate /*!< Proxy-Authenticate header field */,
-    proxy_require/*!< Proxy-Require header field */,
-    reason/**< Reason header field */,
+    proxy_require /*!< Proxy-Require header field */,
+    reason /**< Reason header field */,
     record_route /*!< Record-Route header field */,
     refer_to /*!< Refer-To header fiels */,
     referred_by /*!< Referred-By header */,
     reject_contact /*!< Reject-Contact header */,
-    request_disposition/*!< Request-Disposition header */,
+    request_disposition /*!< Request-Disposition header */,
     require /*!< Require header */,
     retry_after /*!< Retry-After header field */,
     route /*!< Route header field */,
     rpid /*!< Remote-Party-ID header field */,
     server /*!< Server header field */,
-    session_expires/*!< Session-Expires header */,
+    session_expires /*!< Session-Expires header */,
     sip_if_match /*!< SIP-If-Match header field */,
     subject /*!< Subject header field */,
     subscription_state /*!< Subscription-State */,
     supported /*!< Supported  header field */,
-    to/*!< To header field */,
+    to /*!< To header field */,
     unsupported /*!< Unsupported header field */,
-    user_agent/*!< User-Agent header field */,
+    user_agent /*!< User-Agent header field */,
     via /*!< Via header field */,
-    via1/*!< First Via header field */,
-    via2/*!< only used as flag */,
+    via1 /*!< First Via header field */,
+    via2 /*!< only used as flag */,
     www_authenticate /*!< WWW-Authenticate header field */,
-};
+}
 
 interface header_node {
-    readonly rawBuf?: Buffer,
+    readonly rawBuf?: Buffer
     name: string
     parsed_s?: string
     parsed?: any
@@ -160,4 +160,3 @@ export function get_header_type(buf: Buffer): [hdr, string] {
 
     return [hdr.other, head_name]
 }
-

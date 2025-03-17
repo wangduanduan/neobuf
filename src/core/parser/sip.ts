@@ -1,7 +1,7 @@
-import { Buffer } from 'node:buffer';
-import type { header_map } from './header';
-import { get_header_type, hdr } from './header';
-import { LineBreak, LineBreakLen, LineBreak2, LineBreak2Len } from './const';
+import { Buffer } from 'node:buffer'
+import type { header_map } from './header'
+import { get_header_type, hdr } from './header'
+import { LineBreak, LineBreakLen, LineBreak2, LineBreak2Len } from './const'
 
 export class SIPMsg {
     readonly rawBuf: Buffer
@@ -24,13 +24,19 @@ export class SIPMsg {
 
         this.firstLineBuf = this.rawBuf.subarray(0, firstLineEnd + LineBreakLen)
 
-        const headerEnd = this.rawBuf.indexOf(LineBreak2, firstLineEnd + LineBreak.length)
+        const headerEnd = this.rawBuf.indexOf(
+            LineBreak2,
+            firstLineEnd + LineBreak.length
+        )
         if (headerEnd === -1) {
             this.badBuf = true
             return
         }
 
-        this.headerBuf = this.rawBuf.subarray(firstLineEnd + LineBreak.length, headerEnd + LineBreakLen)
+        this.headerBuf = this.rawBuf.subarray(
+            firstLineEnd + LineBreak.length,
+            headerEnd + LineBreakLen
+        )
         this.bodyBuf = this.rawBuf.subarray(headerEnd + LineBreak2Len)
 
         for (const it of this.parseLines()) {
@@ -45,18 +51,17 @@ export class SIPMsg {
 
             this.hm.get(h)?.push({
                 rawBuf: it,
-                name: n
+                name: n,
             })
         }
     }
-    * parseLines() {
-        let start = 0;
+    *parseLines() {
+        let start = 0
         while (start < this.headerBuf.length) {
-            const end = this.headerBuf.indexOf(LineBreak, start);
-            if (end === -1) break;
-            yield this.headerBuf.subarray(start, end + LineBreak.length);
-            start = end + LineBreak.length;
+            const end = this.headerBuf.indexOf(LineBreak, start)
+            if (end === -1) break
+            yield this.headerBuf.subarray(start, end + LineBreak.length)
+            start = end + LineBreak.length
         }
     }
-
 }

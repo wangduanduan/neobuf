@@ -1,5 +1,5 @@
-import { hdr } from "../../core/parser/header"
-import { type header_map, hdr_type_name } from "../../core/parser/header"
+import { hdr } from '../../core/parser/header'
+import { type header_map, hdr_type_name } from '../../core/parser/header'
 
 interface ctx {
     hm: header_map
@@ -7,7 +7,7 @@ interface ctx {
 
 export function format_header(name: string): string {
     if (name === '') {
-        return ""
+        return ''
     }
 
     if (name.endsWith(': ')) {
@@ -21,8 +21,7 @@ export function has_totag(ctx: ctx): boolean {
     return false
 }
 
-export function remove_header(ctx: ctx, header_name: hdr): void {
-}
+export function remove_header(ctx: ctx, header_name: hdr): void {}
 
 export function has_header(ctx: ctx, header_name: string): boolean {
     if (header_name === '') {
@@ -30,7 +29,6 @@ export function has_header(ctx: ctx, header_name: string): boolean {
     }
 
     header_name = format_header(header_name)
-
 
     if (hdr_type_name.has(header_name)) {
         const name = hdr_type_name.get(header_name)!
@@ -48,7 +46,11 @@ export function has_header(ctx: ctx, header_name: string): boolean {
     return false
 }
 
-export function unshift_header(ctx: ctx, header_name: string, header_value: string): boolean {
+export function unshift_header(
+    ctx: ctx,
+    header_name: string,
+    header_value: string
+): boolean {
     if (header_name === '' || header_value === '') {
         return false
     }
@@ -65,23 +67,24 @@ export function unshift_header(ctx: ctx, header_name: string, header_value: stri
         return true
     }
 
-
-    ctx.hm.set(name, [{
-        name: header_name,
-        parsed_s: header_name + header_value,
-    }])
+    ctx.hm.set(name, [
+        {
+            name: header_name,
+            parsed_s: header_name + header_value,
+        },
+    ])
 
     return true
-
 }
 
-export function push_header(ctx: ctx, header_name: hdr, header_value: string): void {
-}
+export function push_header(
+    ctx: ctx,
+    header_name: hdr,
+    header_value: string
+): void {}
 
 export function pop_header(ctx: ctx, header_name: hdr): string {
-    return ""
+    return ''
 }
 
-export function is_method() {
-
-}
+export function is_method() {}
