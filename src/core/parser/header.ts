@@ -61,6 +61,45 @@ export enum hdr {
     www_authenticate /*!< WWW-Authenticate header field */,
 }
 
+export enum sip_method {
+    ack /*!< ACK method */,
+    bye /*!< BYE method */,
+    cancel /*!< CANCEL method */,
+    info /*!< INFO method */,
+    invite /*!< INVITE method */,
+    message /*!< MESSAGE method */,
+    notify /*!< NOTIFY method */,
+    options /*!< OPTIONS method */,
+    prack /*!< PRACK method */,
+    publish /*!< PUBLISH method */,
+    register /*!< REGISTER method */,
+    subscribe /*!< SUBSCRIBE method */,
+    update /*!< UPDATE method */,
+}
+
+export enum sip_status {
+    trying /*!< Trying */,
+    ringing /*!< Ringing */,
+    call_is_being_forwarded /*!< Call Is Being Forwarded */,
+    queued /*!< Queued */,
+    session_progress /*!< Session Progress */,
+    ok /*!< OK */,
+    bad_request /*!< Bad Request */,
+    unauthorized /*!< Unauthorized */,
+    payment_required /*!< Payment Required */,
+    forbidden /*!< Forbidden */,
+    not_found /*!< Not Found */,
+    method_not_allowed /*!< Method Not Allowed */,
+    not_acceptable /*!< Not Acceptable */,
+    proxy,
+}
+
+export enum header_operation {
+    add,
+    del,
+    chg,
+}
+
 interface header_node {
     readonly rawBuf?: Buffer
     name: string
@@ -75,60 +114,60 @@ interface hdr_type_i {
 }
 
 export const hdr_type_s: hdr_type_i = {
-    [hdr.accept_contact]: 'Accept-Contact: ',
-    [hdr.accept_language]: 'Accept-Language: ',
-    [hdr.accept]: 'Accept: ',
-    [hdr.allow_events]: 'Allow-Events: ',
-    [hdr.allow]: 'Allow: ',
-    [hdr.authorization]: 'Authorization: ',
-    [hdr.callid]: 'Call-ID: ',
-    [hdr.callinfo]: 'Call-Infoate: ',
-    [hdr.contact]: 'Contact: ',
-    [hdr.content_disposition]: 'Content-Disposition: ',
-    [hdr.content_encoding]: 'Content-Encoding: ',
-    [hdr.content_length]: 'Content-Length: ',
-    [hdr.content_type]: 'Content-Type: ',
-    [hdr.cseq]: 'CSeq: ',
-    [hdr.date]: 'Date: ',
-    [hdr.diversion]: 'Diversion: ',
-    [hdr.event]: 'Event: ',
-    [hdr.expires]: 'Expires: ',
-    [hdr.from]: 'From: ',
-    [hdr.identity_info]: 'Identity-info: ',
-    [hdr.identity]: 'Identity: ',
-    [hdr.max_forwards]: 'Max-Forwards: ',
-    [hdr.min_expires]: 'Min-Expires: ',
-    [hdr.min_se]: 'Min-SE: ',
-    [hdr.organization]: 'Organization: ',
-    [hdr.pai]: 'P-Asserted-Identity: ',
-    [hdr.path]: 'Path: ',
-    [hdr.ppi]: 'P-Preferred-Identity: ',
-    [hdr.priority]: 'Priority: ',
-    [hdr.privacy]: 'Privacy: ',
-    [hdr.proxy_auth]: 'Proxy-Authorization: ',
-    [hdr.proxy_authenticate]: 'Proxy-Authenticate: ',
-    [hdr.proxy_require]: 'Proxy-Require: ',
-    [hdr.reason]: 'Reason: ',
-    [hdr.record_route]: 'Record-Route: ',
-    [hdr.refer_to]: 'Refer-To: ',
-    [hdr.referred_by]: 'Referred-By: ',
-    [hdr.reject_contact]: 'Reject-Contact: ',
-    [hdr.request_disposition]: 'Request-Disposition: ',
-    [hdr.require]: 'Require: ',
-    [hdr.retry_after]: 'Retry-After: ',
-    [hdr.route]: 'Route: ',
-    [hdr.rpid]: 'Remote-Party-ID: ',
+    [hdr.accept_contact]: 'Accept-Contact',
+    [hdr.accept_language]: 'Accept-Language',
+    [hdr.accept]: 'Accept',
+    [hdr.allow_events]: 'Allow-Events',
+    [hdr.allow]: 'Allow',
+    [hdr.authorization]: 'Authorization',
+    [hdr.callid]: 'Call-ID',
+    [hdr.callinfo]: 'Call-Infoate',
+    [hdr.contact]: 'Contact',
+    [hdr.content_disposition]: 'Content-Disposition',
+    [hdr.content_encoding]: 'Content-Encoding',
+    [hdr.content_length]: 'Content-Length',
+    [hdr.content_type]: 'Content-Type',
+    [hdr.cseq]: 'CSeq',
+    [hdr.date]: 'Date',
+    [hdr.diversion]: 'Diversion',
+    [hdr.event]: 'Event',
+    [hdr.expires]: 'Expires',
+    [hdr.from]: 'From',
+    [hdr.identity_info]: 'Identity-info',
+    [hdr.identity]: 'Identity',
+    [hdr.max_forwards]: 'Max-Forwards',
+    [hdr.min_expires]: 'Min-Expires',
+    [hdr.min_se]: 'Min-SE',
+    [hdr.organization]: 'Organization',
+    [hdr.pai]: 'P-Asserted-Identity',
+    [hdr.path]: 'Path',
+    [hdr.ppi]: 'P-Preferred-Identity',
+    [hdr.priority]: 'Priority',
+    [hdr.privacy]: 'Privacy',
+    [hdr.proxy_auth]: 'Proxy-Authorization',
+    [hdr.proxy_authenticate]: 'Proxy-Authenticate',
+    [hdr.proxy_require]: 'Proxy-Require',
+    [hdr.reason]: 'Reason',
+    [hdr.record_route]: 'Record-Route',
+    [hdr.refer_to]: 'Refer-To',
+    [hdr.referred_by]: 'Referred-By',
+    [hdr.reject_contact]: 'Reject-Contact',
+    [hdr.request_disposition]: 'Request-Disposition',
+    [hdr.require]: 'Require',
+    [hdr.retry_after]: 'Retry-After',
+    [hdr.route]: 'Route',
+    [hdr.rpid]: 'Remote-Party-ID',
     [hdr.server]: 'Server: ',
-    [hdr.session_expires]: 'Session-Expires: ',
-    [hdr.sip_if_match]: 'SIP-If-Match: ',
-    [hdr.subject]: 'Subject: ',
-    [hdr.subscription_state]: 'Subscription-State: ',
-    [hdr.supported]: 'Supported: ',
-    [hdr.to]: 'To: ',
-    [hdr.unsupported]: 'Unsupported: ',
-    [hdr.user_agent]: 'User-Agent: ',
-    [hdr.via]: 'Via: ',
-    [hdr.www_authenticate]: 'WWW-Authenticate: ',
+    [hdr.session_expires]: 'Session-Expires',
+    [hdr.sip_if_match]: 'SIP-If-Match',
+    [hdr.subject]: 'Subject',
+    [hdr.subscription_state]: 'Subscription-State',
+    [hdr.supported]: 'Supported',
+    [hdr.to]: 'To',
+    [hdr.unsupported]: 'Unsupported',
+    [hdr.user_agent]: 'User-Agent',
+    [hdr.via]: 'Via',
+    [hdr.www_authenticate]: 'WWW-Authenticate',
 }
 
 export function hdr_type_map_s(): Map<string, hdr> {
@@ -140,7 +179,7 @@ export function hdr_type_map_s(): Map<string, hdr> {
 }
 export const hdr_type_name = hdr_type_map_s()
 
-const headerFlag = Buffer.from(': ')
+const headerFlag = Buffer.from(':')
 export function get_header_type(buf: Buffer): [hdr, string] {
     const start = buf.indexOf(headerFlag)
 
@@ -152,7 +191,7 @@ export function get_header_type(buf: Buffer): [hdr, string] {
         return [hdr.invalid_header, '']
     }
 
-    const head_name = buf.subarray(0, start + headerFlag.length).toString()
+    const head_name = buf.subarray(0, start).toString()
 
     if (hdr_type_name.has(head_name)) {
         return [hdr_type_name.get(head_name)!, head_name]
