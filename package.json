@@ -1,18 +1,21 @@
 {
-    "name": "neobuf",
-    "module": "index.ts",
-    "type": "module",
-    "devDependencies": {
-        "@types/bun": "latest",
-        "prettier": "^3.5.3"
-    },
-    "peerDependencies": {
-        "typescript": "^5.0.0"
-    },
-    "prettier": {
-        "trailingComma": "es5",
-        "tabWidth": 4,
-        "semi": false,
-        "singleQuote": true
-    }
+  "name": "neobuf",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "^3.5.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": true
+  },
+  "dependencies": {
+    "pino": "^9.6.0"
+  }
 }
