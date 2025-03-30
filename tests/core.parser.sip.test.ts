@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test'
-import { SIPMsg } from '../src/core/parser/sip'
+import { SIPMsg } from '../src/core/parser/sip_message'
 import { readFileSync } from 'node:fs'
 import { hdr } from '../src/core/parser/header'
 

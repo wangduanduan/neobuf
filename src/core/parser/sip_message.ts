@@ -2,15 +2,28 @@ import { Buffer } from 'node:buffer'
 import type { header_map } from './header'
 import { get_header_type, hdr } from './header'
 import { LineBreak, LineBreakLen, LineBreak2, LineBreak2Len } from './const'
+import {
+    parse_start_line,
+    type request_line,
+    type status_line,
+} from './first_line'
+import { get_logger } from '../../modules/xlog'
+
+const logger = get_logger('SIPMsg')
+const emptyBuf = Buffer.from([])
+const emptyObj = {}
 
 export class SIPMsg {
     readonly rawBuf: Buffer
-    badBuf: Boolean = false
+    firstLineBuf: Buffer = emptyBuf
+    headerBuf: Buffer = emptyBuf
+    bodyBuf: Buffer = emptyBuf
 
-    firstLineBuf: Buffer = Buffer.from([])
-    headerBuf: Buffer = Buffer.from([])
+    hasError = false
+    requestLine = <request_line>emptyObj
+    statusLine = <status_line>emptyObj
     hm: header_map = new Map()
-    bodyBuf: Buffer = Buffer.from([])
+    isRequest: Boolean = false
 
     constructor(buf: Buffer) {
         this.rawBuf = buf
@@ -18,18 +31,39 @@ export class SIPMsg {
         const firstLineEnd = this.rawBuf.indexOf(LineBreak)
 
         if (firstLineEnd === -1) {
-            this.badBuf = true
+            this.hasError = true
+            this.printErrorBuf()
             return
         }
 
         this.firstLineBuf = this.rawBuf.subarray(0, firstLineEnd + LineBreakLen)
+
+        const start_line = parse_start_line(this.firstLineBuf.toString())
+        if (!start_line) {
+            logger.error(
+                'parse first line failed: %s',
+                this.firstLineBuf.toString()
+            )
+            this.hasError = true
+            this.printErrorBuf()
+            return
+        }
+
+        if ('method' in start_line) {
+            this.requestLine = start_line as request_line
+            this.isRequest = true
+        } else {
+            this.statusLine = start_line as status_line
+            this.isRequest = false
+        }
 
         const headerEnd = this.rawBuf.indexOf(
             LineBreak2,
             firstLineEnd + LineBreak.length
         )
         if (headerEnd === -1) {
-            this.badBuf = true
+            this.hasError = true
+            this.printErrorBuf()
             return
         }
 
@@ -42,7 +76,8 @@ export class SIPMsg {
         for (const it of this.parseLines()) {
             const [h, n] = get_header_type(it)
             if (h === hdr.invalid_header) {
-                this.badBuf = true
+                this.hasError = true
+                this.printErrorBuf()
                 return
             }
             if (!this.hm.has(h)) {
@@ -54,6 +89,9 @@ export class SIPMsg {
                 name: n,
             })
         }
+    }
+    printErrorBuf() {
+        logger.error('error buf: %s', this.rawBuf.toString())
     }
     *parseLines() {
         let start = 0

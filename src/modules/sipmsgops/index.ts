@@ -154,8 +154,4 @@ export function get_header_count(ctx: ctx, header_name: string): number {
     return i
 }
 
-export function pop_header(ctx: ctx, header_name: hdr): string {
-    return ''
-}
-
 export function is_method() {}
